@@ -6,14 +6,16 @@ const app = express();
 const port = process.env.PORT;
 const secret = process.env.SECRET;
 
-const CreateUser = require('./Routes/Create.User.Route');
+const UserRoute = require('./Routes/User.Route');
+const CharacterRoute = require('./Routes/Character.Route');
 
 app.use(session({ secret: secret }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 
-app.use('/user', CreateUser);
+app.use('/user', UserRoute);
+app.use('/character', CharacterRoute);
 
 app.listen(port, () => {
     console.log("RPG LIBRARY IS RUNNING");
