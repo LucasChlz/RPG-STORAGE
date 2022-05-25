@@ -62,14 +62,17 @@ module.exports = {
 
             if(passwordCompare)
             {
+
                 var sess = req.session;
                 sess.name = findUser.name;
                 sess.email = findUser.email;
+                sess.userId = findUser._id;
                 sess.login = true;
 
                 return res.send({
                     name: sess.name,
                     email: sess.email,
+                    userId: sess.userId,
                     login: sess.login
                 });
             } else
