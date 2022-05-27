@@ -1,5 +1,6 @@
 const UserModel = require('../Models/User.Model');
 const bcrypt = require('bcryptjs');
+const { json } = require('express/lib/response');
 const salt = bcrypt.genSaltSync(10);
 
 module.exports = {
@@ -8,19 +9,19 @@ module.exports = {
 
         if(name == "")
         {
-            return res.send({ message: "you need a name"});
+            return res.send({ message: "you need a name"}).end()
         } else if (email == "")
         {
-            return res.send({ message: "you need a email"});
+            return res.send({ message: "you need a email"}).end()
         } else if (password == "")
         {
-            return res.send({ message: "you need a strong password"});
+            return res.send({ message: "you need a strong password"}).end()
         } else if (name.length < 4)
         {
-            return res.send({ message: "you need a name longer than 4 characters"});
+            return res.send({ message: "you need a name longer than 4 characters"}).end()
         } else if (password.length < 6)
         {
-            return res.send({ message: "your password is too weak, try other"});
+            return res.send({ message: "your password is too weak, try other"}).end()
         }
 
         let formatEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -28,7 +29,7 @@ module.exports = {
         {
             return res.send({
                 message: "this email format is invalid, please try again"
-            });
+            }).end();
         }
 
         const verifyEmail = await UserModel.findOne({email: email});
@@ -36,7 +37,7 @@ module.exports = {
         {
             return res.send({
                 message: "this email already used"
-            });
+            }).end();
         } else
         {
             const hashPassword = bcrypt.hashSync(password, salt);
@@ -47,7 +48,8 @@ module.exports = {
                 password: hashPassword
             });
 
-            return res.send({name,email});
+            
+            return res.send({message: 'user sucessfully created!'}).end()
         }
     },
 
@@ -74,25 +76,25 @@ module.exports = {
                     email: sess.email,
                     userId: sess.userId,
                     login: sess.login
-                });
+                }).end();
             } else
             {
-                return res.send({ message: "invalid password" });   
+                return res.send({ message: "invalid password" }).end();   
             }
         } else {
-            return res.send({ message: "email not found" });
+            return res.send({ message: "email not found" }).end();
         }
     },
 
     logout: async (req, res) => {
         req.session.destroy((err) => {
             if (err) {
-                return res.send({ message: err });
+                return res.send({ message: err }).end();
             }
 
             return res.send({
                 session: req.session
-            });
+            }).end();
         });
     }
 }
